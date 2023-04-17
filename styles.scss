@@ -1,5 +1,29 @@
 @import "nullstyle.scss";
 
+// Адаптативное свойство
+$maxWidth: 1920;
+$maxWidthContainer: 1170;
+
+@mixin adaptive-value($property, $startSize, $minSize, $type){
+    $addSize: $startSize - $minSize;
+    @if $type==1{
+        //Только если меньше контейнера
+        #{$property}: $startSize + px;
+        @media (max-width: #{$maxWidthContainer + px}){
+            #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidthContainer - 320}));
+        }
+    }@else if $type==2 {
+         //Только если больше контейнера
+         #{$property}: $startSize + px;
+         @media (min-width: #{$maxWidthContainer + px}){
+             #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+         }
+    }@else {
+        // Всегда
+             #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320}));
+    }
+}
+
 html,body{
     line-height: 1;
     font-size: 14px;
@@ -33,7 +57,8 @@ html,body{
         margin: 0px auto;
     }
     &__body {
-        padding: 50px;
+        @include adaptive-value("padding", 50, 20, 0)
+        // padding: 50px;
     }
     &__title {
         font-size: 30px;
@@ -46,20 +71,5 @@ html,body{
     }
 }
 
-@media (min-width:1600px){  /*отступы будут увеличиваться только на расширениях больше 1600px*/
-    .block__body{
-        padding: calc(20px + (50 - 20) * ((100vw - 320px) / (1600 - 320)));
-    }
-    .block__title{
-        font-size:calc(20px + (30 - 20) * ((100vw - 320px) / (1600 - 320)));
-        margin-bottom:calc(10px + (20 - 10) * ((100vw - 320px) / (1600 - 320))); 
-    }
-    .block__text{
-        font-size:calc(14px + (16 - 14) * ((100vw - 320px) / (1600 - 320)));
-    }
-    .page__block{
-        margin-bottom:calc(20px + (50 - 20) * ((100vw - 320px) / (1600 - 320))); 
-    }
-}
 
 
